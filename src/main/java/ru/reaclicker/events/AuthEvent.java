@@ -15,7 +15,7 @@ import ru.reaclicker.events.core.Event;
  * Created by Artur Belogur on 09.03.17.
  */
 @Slf4j
-public class UserEvent extends SessionHolder implements Event {
+public class AuthEvent extends SessionHolder implements Event {
 
     private UserDao userDao = new UserDaoImpl();
 
@@ -41,12 +41,13 @@ public class UserEvent extends SessionHolder implements Event {
                 return;
             }
 
-            loginUsers.put(client.getSessionId(), user.getId());
+            loginUsers.put(client.getSessionId(), user);
+            server.getBroadcastOperations().sendEvent("number-of-users", loginUsers.size());
         });
 
         server.addEventListener("check-session", User.class, (client, userRequest, ackRequest) -> {
-            Long userId = loginUsers.get(client.getSessionId());
-            if (userId == null) {
+            User user = loginUsers.get(client.getSessionId());
+            if (user == null) {
                 client.sendEvent("check-session", false);
             }
             else client.sendEvent("check-session", true);

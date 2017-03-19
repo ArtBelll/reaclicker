@@ -1,6 +1,7 @@
 package ru.reaclicker;
 
 import org.redisson.api.RedissonClient;
+import ru.reaclicker.domain.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,7 @@ public class Factory {
 
     private RedissonClient redissonClient;
 
-    private Map<UUID, Long> loginUsers = new HashMap<>();
+    private Map<UUID, User> loginUsers = new HashMap<>();
 
     private static class LazyHolder {
         private static final Factory INSTANCE = new Factory();
@@ -31,7 +32,7 @@ public class Factory {
         getInstance().redissonClient = rc;
     }
 
-    public static Map<UUID, Long> getLoginUsers() {
+    public static Map<UUID, User> getLoginUsers() {
         return getInstance().loginUsers;
     }
 }
