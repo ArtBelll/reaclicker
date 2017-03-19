@@ -21,7 +21,7 @@ public class Entrypoint {
 
     public static void main(String[] args) throws IOException {
         final RedissonClient redisson = Redisson.create(getRedissonConfig());
-        RedissonFactory.setRedissonClient(redisson);
+        Factory.setRedissonClient(redisson);
 
         Configuration conf = new Configuration();
         conf.setHostname("localhost");

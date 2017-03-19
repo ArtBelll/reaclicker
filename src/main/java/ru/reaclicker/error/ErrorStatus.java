@@ -5,7 +5,9 @@ package ru.reaclicker.error;
  */
 public abstract class ErrorStatus {
 
-    public final static int INVALID_USERNAME = 1;
+    public final static int INVALID_USERNAME_OR_PASSWORD = 1;
 
     public final static int NAME_ALREADY_USED = 2;
+
+    public final static int MISS_REQUEST_FIELDS = 3;
 }

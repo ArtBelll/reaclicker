@@ -28,9 +28,10 @@ public class User implements Serializable, Comparable<User> {
 
     public User() {}
 
-    public User(String name, String pass) {
+    public User(String name, String password) {
         this.name = name;
-        this.password = pass;
+        this.password = password;
+        this.score = 0;
     }
 
     @Override
