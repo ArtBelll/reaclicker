@@ -17,7 +17,11 @@ import ru.reaclicker.events.core.Event;
 @Slf4j
 public class AuthEvent extends SessionHolder implements Event {
 
-    private UserDao userDao = new UserDaoImpl();
+    private UserDao userDao;
+
+    public AuthEvent() {
+        userDao = new UserDaoImpl();
+    }
 
     @Override
     public void initEvents(SocketIOServer server) {

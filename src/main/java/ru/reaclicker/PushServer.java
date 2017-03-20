@@ -3,6 +3,7 @@ package ru.reaclicker;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOServer;
 import lombok.extern.slf4j.Slf4j;
+import ru.reaclicker.events.ClickEvent;
 import ru.reaclicker.events.ConnectEvent;
 import ru.reaclicker.events.AuthEvent;
 import ru.reaclicker.events.core.Event;
@@ -31,6 +32,7 @@ public class PushServer {
         List<Event> events = new ArrayList<>();
         events.add(new AuthEvent());
         events.add(new ConnectEvent());
+        events.add(new ClickEvent());
         events.forEach(e -> e.initEvents(server));
     }
 }

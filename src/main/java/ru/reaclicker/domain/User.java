@@ -34,6 +34,10 @@ public class User implements Serializable, Comparable<User> {
         this.score = 0;
     }
 
+    public void increaseScore(double score) {
+        this.score += score;
+    }
+
     @Override
     public boolean equals(Object o) {
         return ((User) o).getId() == id;

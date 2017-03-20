@@ -10,4 +10,6 @@ public abstract class ErrorStatus {
     public final static int NAME_ALREADY_USED = 2;
 
     public final static int MISS_REQUEST_FIELDS = 3;
+
+    public final static int USER_DONT_HAVE_SESSION = 4;
 }
