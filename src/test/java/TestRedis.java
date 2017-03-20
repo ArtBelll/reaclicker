@@ -34,9 +34,10 @@ public class TestRedis {
         connectRedis();
         Date dateStart = new Date();
         RScoredSortedSet<Integer> users = redis.getScoredSortedSet("test");
-        for(int i = 0; i <= 1000000; i++) {
-            users.add(new Random().nextInt(10000), i);
-        }
+        Integer userId = users.valueRange(6, 6).iterator().next();
+//        for(int i = 0; i <= 10; i++) {
+//            users.add(new Random().nextInt(10000), i);
+//        }
         Date dateEnd = new Date();
 
         log.info("Time: {}", new Date(dateEnd.getTime() - dateStart.getTime()));
