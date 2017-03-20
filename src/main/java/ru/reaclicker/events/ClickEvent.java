@@ -42,6 +42,8 @@ public class ClickEvent extends SessionHolder implements Event {
 
             user.increaseScore(score);
             globalClickDao.increase(score.intValue());
+
+            server.getBroadcastOperations().sendEvent("leaderboard-update", true);
         });
     }
 }

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.reaclicker.events.ClickEvent;
 import ru.reaclicker.events.ConnectEvent;
 import ru.reaclicker.events.AuthEvent;
+import ru.reaclicker.events.LeaderboardEvent;
 import ru.reaclicker.events.core.Event;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class PushServer {
         events.add(new AuthEvent());
         events.add(new ConnectEvent());
         events.add(new ClickEvent());
+        events.add(new LeaderboardEvent());
         events.forEach(e -> e.initEvents(server));
     }
 }
