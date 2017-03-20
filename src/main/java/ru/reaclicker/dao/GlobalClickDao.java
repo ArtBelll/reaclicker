@@ -5,5 +5,7 @@ package ru.reaclicker.dao;
  */
 public interface GlobalClickDao {
 
+    long get();
+
     void increase(int score);
 }

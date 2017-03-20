@@ -44,6 +44,7 @@ public class ClickEvent extends SessionHolder implements Event {
             globalClickDao.increase(score.intValue());
 
             server.getBroadcastOperations().sendEvent("leaderboard-update", true);
+            server.getBroadcastOperations().sendEvent("global-upload", globalClickDao.get());
         });
     }
 }

@@ -11,8 +11,13 @@ public class GlobalClickDaoImpl extends RedisClientHolder implements GlobalClick
     public static final String GLOBAL = "global";
 
     @Override
+    public long get() {
+        return redisClient.getAtomicLong(GLOBAL).get();
+    }
+
+    @Override
     public void increase(int score) {
-        redisClient.getAtomicLong("global");
+        redisClient.getAtomicLong(GLOBAL).getAndAdd(score);
     }
 
     @Override
