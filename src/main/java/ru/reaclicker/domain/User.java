@@ -22,20 +22,11 @@ public class User implements Serializable, Comparable<User> {
     @Setter
     private String password;
 
-    @Getter
-    @Setter
-    private double score;
-
     public User() {}
 
     public User(String name, String password) {
         this.name = name;
         this.password = password;
-        this.score = 0;
-    }
-
-    public void increaseScore(double score) {
-        this.score += score;
     }
 
     @Override

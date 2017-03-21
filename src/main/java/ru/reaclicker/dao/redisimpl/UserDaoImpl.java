@@ -16,18 +16,13 @@ public class UserDaoImpl extends RedisClientHolder implements UserDao {
     public long add(@NonNull User user) {
         long id = getIdentifier().incrementAndGet();
         user.setId(id);
-        redisClient.getMap(USERS).put(user.getName(), user);
+        redisClient.getMap(USERS).put(user.getId(), user);
         return id;
     }
 
     @Override
-    public User get(@NonNull String name) {
-        return (User) redisClient.getMap(USERS).get(name);
-    }
-
-    @Override
-    public void update(@NonNull User user) {
-        redisClient.getList(USERS).add(user);
+    public User get(@NonNull long id) {
+        return (User) redisClient.getMap(USERS).get(id);
     }
 
     @Override
