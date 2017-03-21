@@ -5,7 +5,7 @@
   <script src="res/socket.io/socket.io.js"></script>
   <script src="res/moment.min.js"></script>
 
-  <title>Demo Chat</title>
+  <title>Demo Reaclicer</title>
 
   <style>
     body {
@@ -20,78 +20,54 @@
     .disconnect-msg {color:red;}
     .send-msg {color:#888}
   </style>
-
-  <script>
-
-    var userName = 'user' + Math.floor((Math.random()*1000)+1);
-
-    var socket =  io.connect('http://localhost:8999');
- 
- 	socket.emit('register', {name: userName, password: "asdasd"}, function() {
-    	socket.emit('login', {name: userName, password: "asdasd"});
-    });
-
-    socket.on('connect', function() {
-      output('<span class="connect-msg">Client has connected to the server!</span>');
-    });
-
-    socket.on('chatevent', function(data) {
-      output('<span class="username-msg">' + data.userName + ':</span> ' + data.message);
-    });
-
-    socket.on('disconnect', function() {
-      output('<span class="disconnect-msg">The client has disconnected!</span>');
-    });
-
-    socket.on('number-of-users', function(data) {
-    	var counter = document.getElementById('counter');
-      counter.innerHTML = data;
-    });
-
-    function sendDisconnect() {
-      socket.disconnect();
-    }
-
-    function sendMessage() {
-      var message = $('#msg').val();
-      $('#msg').val('');
-
-      var jsonObject = {userName: userName,
-        message: message};
-      socket.emit('chatevent', jsonObject);
-    }
-
-    function output(message) {
-      var currentTime = "<span class='time'>" +  moment().format('HH:mm:ss.SSS') + "</span>";
-      var element = $("<div>" + currentTime + " " + message + "</div>");
-      $('#console').prepend(element);
-    }
-
-    $(document).keydown(function(e){
-      if(e.keyCode == 13) {
-        $('#send').click();
-      }
-    });
-  </script>
-
-
 </head>
 <body>
-<h1 id="counter">0</h1>
-<h1>Netty-socketio Demo Chat</h1>
+<h2 id="counterUsers">0</h2>
+<h2 id="counterClicks">0</h2>
+<div id="click" class="btn-default btn">Click</div>
 
-<br/>
+<div id="leaderboard"></div>
 
-<div id="console" class="well">
-</div>
+<script>
+  var userName = 'user' + Math.floor((Math.random()*1000)+1);
 
-<form class="well form-inline" onsubmit="return false;">
-  <input id="msg" class="input-xlarge" type="text" placeholder="Type something..."/>
-  <button type="button" onClick="sendMessage()" class="btn" id="send">Send</button>
-  <button type="button" onClick="sendDisconnect()" class="btn">Disconnect</button>
-</form>
+  var socket =  io.connect('http://localhost:8999');
 
+  socket.emit('register', {name: userName, password: "asdasd"}, function() {
+    socket.emit('login', {name: userName, password: "asdasd"}, function () {
+      socket.emit("get-global", 0);
+      socket.emit("leaderboard", 0);
+    });
+  });
 
+  socket.on('number-of-users', function(data) {
+    $('#counterUsers').text(data);
+  });
 
+  socket.on('global', function(data) {
+    $('#counterClicks').text(data);
+  });
+
+  socket.on('leaderboard', function(data) {
+    $('#leaderboard').empty();
+    for (var user of data) {
+      var element = ('<p>' + user.name + ' ' + user.score + '</p>');
+      $('#leaderboard').prepend(element);
+    }
+  });
+
+  socket.on('leaderboard-update', function() {
+    socket.emit("leaderboard", 0);
+  });
+
+  $('#click').click(function() {
+    socket.emit("click-global", 1);
+  });
+
+  socket.on('error', function(data) {
+    console.log(data);
+  });
+
+</script>
 </body>
 </html>

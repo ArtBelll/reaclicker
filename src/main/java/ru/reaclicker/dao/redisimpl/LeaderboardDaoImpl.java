@@ -19,12 +19,17 @@ public class LeaderboardDaoImpl extends RedisClientHolder implements Leaderboard
 
     @Override
     public void increaseScore(long userId, double score) {
-        redisClient.getScoredSortedSet(LEADERBOARD).addScore(score, userId);
+        redisClient.getScoredSortedSet(LEADERBOARD).addScore(userId, score);
     }
 
     @Override
-    public int getRank(long userId) {
+    public Integer getRank(long userId) {
         return redisClient.getScoredSortedSet(LEADERBOARD).rank(userId);
+    }
+
+    @Override
+    public Double getScore(long userId) {
+        return redisClient.getScoredSortedSet(LEADERBOARD).getScore(userId);
     }
 
     @Override
