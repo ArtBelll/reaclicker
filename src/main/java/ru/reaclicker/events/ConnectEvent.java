@@ -19,6 +19,7 @@ public class ConnectEvent extends SessionHolder implements Event {
 
         server.addDisconnectListener(client -> {
             loginUsers.remove(client.getSessionId());
+            server.getBroadcastOperations().sendEvent("number-of-users", loginUsers.size());
             log.info("User disconnected {}", client.getHandshakeData().getAddress().getAddress());
         });
     }

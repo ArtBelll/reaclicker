@@ -2,6 +2,8 @@ package ru.reaclicker.events;
 
 import com.corundumstudio.socketio.SocketIOServer;
 import lombok.extern.slf4j.Slf4j;
+import ru.reaclicker.dao.RelationsNameIdDao;
+import ru.reaclicker.dao.redisimpl.RelationsNameIdDaoImpl;
 import ru.reaclicker.error.ErrorResponse;
 import ru.reaclicker.error.ErrorStatus;
 import ru.reaclicker.events.core.SessionHolder;
@@ -17,21 +19,25 @@ import ru.reaclicker.events.core.Event;
 @Slf4j
 public class AuthEvent extends SessionHolder implements Event {
 
-    private UserDao userDao;
+    private RelationsNameIdDao relationsNameIdDao;
 
     public AuthEvent() {
-        userDao = new UserDaoImpl();
+        relationsNameIdDao = new RelationsNameIdDaoImpl();
     }
 
     @Override
     public void initEvents(SocketIOServer server) {
         server.addEventListener("register", User.class, (client, userRequest, ackRequest) -> {
-            if (userDao.get(userRequest.getName()) != null) {
+
+            if (relationsNameIdDao.getId(userRequest.getName()) != null) {
                 client.sendEvent("error", new ErrorResponse("This name already exist", ErrorStatus.NAME_ALREADY_USED));
                 return;
             }
+
             User newUser = new User(userRequest.getName(), PasswordHasher.hashPassword(userRequest.getPassword()));
             userDao.add(newUser);
+
+            relationsNameIdDao.add(newUser.getName(), newUser.getId());
         });
 
         server.addEventListener("login", User.class, (client, userRequest, ackRequest) -> {
@@ -39,8 +45,14 @@ public class AuthEvent extends SessionHolder implements Event {
                 client.sendEvent("error", new ErrorResponse("Missed one or more request fields", ErrorStatus.MISS_REQUEST_FIELDS));
             }
 
-            User user = userDao.get(userRequest.getName());
-            if (user == null || !PasswordHasher.checkPassword(userRequest.getPassword(), user.getPassword())) {
+            Long userId = relationsNameIdDao.getId(userRequest.getName());
+            if (userId == null) {
+                client.sendEvent("error", new ErrorResponse("Invalid name or password", ErrorStatus.INVALID_USERNAME_OR_PASSWORD));
+                return;
+            }
+
+            User user = userDao.get(userId);
+            if (!PasswordHasher.checkPassword(userRequest.getPassword(), user.getPassword())) {
                 client.sendEvent("error", new ErrorResponse("Invalid name or password", ErrorStatus.INVALID_USERNAME_OR_PASSWORD));
                 return;
             }

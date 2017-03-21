@@ -3,8 +3,10 @@ package ru.reaclicker.events;
 import com.corundumstudio.socketio.SocketIOServer;
 import ru.reaclicker.dao.GlobalClickDao;
 import ru.reaclicker.dao.LeaderboardDao;
+import ru.reaclicker.dao.UserDao;
 import ru.reaclicker.dao.redisimpl.GlobalClickDaoImpl;
 import ru.reaclicker.dao.redisimpl.LeaderboardDaoImpl;
+import ru.reaclicker.dao.redisimpl.UserDaoImpl;
 import ru.reaclicker.domain.User;
 import ru.reaclicker.error.ErrorResponse;
 import ru.reaclicker.error.ErrorStatus;
@@ -33,18 +35,21 @@ public class ClickEvent extends SessionHolder implements Event {
                 return;
             }
 
-            if (user.getScore() == 0) {
-                leaderboardDao.add(user.getId(), 0);
+            if (leaderboardDao.getRank(user.getId()) == null) {
+                leaderboardDao.add(user.getId(), score);
             }
             else {
                 leaderboardDao.increaseScore(user.getId(), score);
             }
 
-            user.increaseScore(score);
             globalClickDao.increase(score.intValue());
 
             server.getBroadcastOperations().sendEvent("leaderboard-update", true);
-            server.getBroadcastOperations().sendEvent("global-upload", globalClickDao.get());
+            server.getBroadcastOperations().sendEvent("global", globalClickDao.get());
+        });
+
+        server.addEventListener("get-global", Double.class, (client, data, ackSender) -> {
+            client.sendEvent("global", globalClickDao.get());
         });
     }
 }
