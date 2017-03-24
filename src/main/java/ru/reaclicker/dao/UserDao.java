@@ -10,5 +10,7 @@ public interface UserDao {
 
     long add(@NonNull User user);
 
-    User get(@NonNull long id);
+    User get(long id);
+
+    User get(@NonNull String name);
 }
