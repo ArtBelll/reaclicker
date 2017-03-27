@@ -25,6 +25,9 @@
 <h2 id="counterUsers">0</h2>
 <h2 id="counterClicks">0</h2>
 <div id="click" class="btn-default btn">Click</div>
+<div id="match" class="btn-default btn">Play match</div>
+
+<div id="counterMatch"></div>
 
 <div id="leaderboard"></div>
 
@@ -62,6 +65,14 @@
 
   $('#click').click(function() {
     socket.emit("click-global", 1);
+  });
+
+  $('#match').click(function() {
+    socket.emit("search");
+  });
+
+  socket.on("start-match", function (enemy) {
+    console.log(enemy);
   });
 
   socket.on('error', function(data) {
